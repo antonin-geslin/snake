@@ -63,6 +63,7 @@ def display_menu():
         if pygame.mouse.get_pressed() == (1,0,0):
             menu = 0
             score_menu = 1
+    pygame.display.update()
 
 #Affichage du menu et redirections#
 
@@ -103,6 +104,7 @@ def display_score():
         if pygame.mouse.get_pressed() == (1,0,0):
             menu = 1
             score_menu = 0
+    pygame.display.update()
 
 #Affichage de la fenetre de score# 
 
@@ -233,8 +235,8 @@ def game_over(snake):
         write_scores(joueur, score)
         game = 0
         over = 1
+    pygame.display.update()
 #Gestion du game over et redirections#
-
 
 
 joueur = input("PLAYER NAME : ")
@@ -264,37 +266,41 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    if menu == 1:
+    while menu == 1:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
         display_menu()
-        while game == 1:
-            pygame.time.delay(100)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                    game = 0
-            display_game()
-            snake.draw(window)
-            food.draw(window)
-            snake.move()
-            snake.check_food(food)
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_LEFT]:
-                snake.check_move(Direction.LEFT)
-            elif keys[pygame.K_RIGHT]:
-                snake.check_move(Direction.RIGHT)
-            elif keys[pygame.K_UP]:
-                snake.check_move(Direction.UP)
-            elif keys[pygame.K_DOWN]:
-                snake.check_move(Direction.DOWN)
-            game_over(snake)
-            pygame.display.update()
-        while score_menu == 1:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
-                    score_menu = 0
-            display_score()
-            pygame.display.update()
+    while game == 1:
+        pygame.time.delay(50)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                game = 0
+        display_game()
+        snake.draw(window)
+        food.draw(window)
+        snake.move()
+        snake.check_food(food)
+        pygame.display.update()
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            snake.check_move(Direction.LEFT)
+        elif keys[pygame.K_RIGHT]:
+            snake.check_move(Direction.RIGHT)
+        elif keys[pygame.K_UP]:
+            snake.check_move(Direction.UP)
+        elif keys[pygame.K_DOWN]:
+            snake.check_move(Direction.DOWN)
+        game_over(snake)
+        pygame.display.update()
+    while score_menu == 1:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                score_menu = 0
+        display_score()
+        pygame.display.update()
     while over == 1:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -315,6 +321,17 @@ while running:
             if pygame.mouse.get_pressed() == (1,0,0):
                 menu = 1
                 over = 0
+                color = (153,202,151)
+                block_size = 20
+                snake = Snake(block_size, bounds)
+                food = Food(block_size, bounds)
+                running = True
+                menu = 1
+                game = 0
+                over = 0
+                score_menu = 0
+                score = 0
+                x,y = pygame.mouse.get_pos()
         if quit_rect.collidepoint(x,y):
             if pygame.mouse.get_pressed() == (1,0,0):
                 running = False
